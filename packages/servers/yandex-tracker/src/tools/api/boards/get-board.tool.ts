@@ -6,6 +6,7 @@ import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { GetBoardParamsSchema } from './get-board.schema.js';
+import { GetBoardOutputSchema } from './get-board.output-schema.js';
 import { GET_BOARD_TOOL_METADATA } from './get-board.metadata.js';
 
 export class GetBoardTool extends BaseTool<YandexTrackerFacade> {
@@ -13,6 +14,10 @@ export class GetBoardTool extends BaseTool<YandexTrackerFacade> {
 
   protected override getParamsSchema(): typeof GetBoardParamsSchema {
     return GetBoardParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof GetBoardOutputSchema {
+    return GetBoardOutputSchema;
   }
 
   async execute(params: ToolCallParams): Promise<ToolResult> {

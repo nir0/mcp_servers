@@ -13,6 +13,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { ResultLogger } from '@fractalizer/mcp-core';
 import { BulkMoveIssuesParamsSchema } from './bulk-move-issues.schema.js';
+import { BulkMoveIssuesOutputSchema } from './bulk-move-issues.output-schema.js';
 
 import { BULK_MOVE_ISSUES_TOOL_METADATA } from './bulk-move-issues.metadata.js';
 
@@ -42,6 +43,11 @@ export class BulkMoveIssuesTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof BulkMoveIssuesParamsSchema {
     return BulkMoveIssuesParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof BulkMoveIssuesOutputSchema {
+    return BulkMoveIssuesOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, BulkMoveIssuesParamsSchema);

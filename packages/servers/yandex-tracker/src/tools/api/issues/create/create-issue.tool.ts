@@ -14,6 +14,7 @@ import { ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { IssueWithUnknownFields } from '#tracker_api/entities/index.js';
 import type { CreateIssueDto } from '#tracker_api/dto/index.js';
 import { CreateIssueParamsSchema } from '#tools/api/issues/create/create-issue.schema.js';
+import { CreateIssueOutputSchema } from './create-issue.output-schema.js';
 
 import { CREATE_ISSUE_TOOL_METADATA } from './create-issue.metadata.js';
 
@@ -41,6 +42,10 @@ export class CreateIssueTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof CreateIssueParamsSchema {
     return CreateIssueParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof CreateIssueOutputSchema {
+    return CreateIssueOutputSchema;
   }
   /**
    * Построить объект с опциональными полями (только с заполненными значениями)

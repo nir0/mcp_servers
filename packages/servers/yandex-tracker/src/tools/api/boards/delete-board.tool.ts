@@ -8,7 +8,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteBoardParamsSchema } from './delete-board.schema.js';
-
+import { DeleteBoardOutputSchema } from './delete-board.output-schema.js';
 import { DELETE_BOARD_TOOL_METADATA } from './delete-board.metadata.js';
 
 export class DeleteBoardTool extends BaseTool<YandexTrackerFacade> {
@@ -16,6 +16,10 @@ export class DeleteBoardTool extends BaseTool<YandexTrackerFacade> {
 
   protected override getParamsSchema(): typeof DeleteBoardParamsSchema {
     return DeleteBoardParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof DeleteBoardOutputSchema {
+    return DeleteBoardOutputSchema;
   }
 
   async execute(params: ToolCallParams): Promise<ToolResult> {

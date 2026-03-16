@@ -8,6 +8,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteProjectParamsSchema } from './delete-project.schema.js';
+import { DeleteProjectOutputSchema } from './delete-project.output-schema.js';
 
 import { DELETE_PROJECT_TOOL_METADATA } from './delete-project.metadata.js';
 
@@ -21,6 +22,11 @@ export class DeleteProjectTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof DeleteProjectParamsSchema {
     return DeleteProjectParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof DeleteProjectOutputSchema {
+    return DeleteProjectOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, DeleteProjectParamsSchema);
     if (!validation.success) {

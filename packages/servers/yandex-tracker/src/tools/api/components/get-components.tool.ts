@@ -7,6 +7,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { ComponentWithUnknownFields } from '#tracker_api/entities/index.js';
 import { GetComponentsParamsSchema } from './get-components.schema.js';
+import { GetComponentsOutputSchema } from './get-components.output-schema.js';
 
 import { GET_COMPONENTS_TOOL_METADATA } from './get-components.metadata.js';
 
@@ -23,6 +24,11 @@ export class GetComponentsTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof GetComponentsParamsSchema {
     return GetComponentsParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof GetComponentsOutputSchema {
+    return GetComponentsOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, GetComponentsParamsSchema);
     if (!validation.success) {

@@ -11,6 +11,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DownloadAttachmentParamsSchema } from './download-attachment.schema.js';
+import { DownloadAttachmentOutputSchema } from './download-attachment.output-schema.js';
 import { writeFile } from 'node:fs/promises';
 
 import { DOWNLOAD_ATTACHMENT_TOOL_METADATA } from './download-attachment.metadata.js';
@@ -42,6 +43,11 @@ export class DownloadAttachmentTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof DownloadAttachmentParamsSchema {
     return DownloadAttachmentParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof DownloadAttachmentOutputSchema {
+    return DownloadAttachmentOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, DownloadAttachmentParamsSchema);

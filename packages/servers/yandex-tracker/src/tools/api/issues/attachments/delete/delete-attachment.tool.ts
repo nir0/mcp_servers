@@ -11,6 +11,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteAttachmentParamsSchema } from './delete-attachment.schema.js';
+import { DeleteAttachmentOutputSchema } from './delete-attachment.output-schema.js';
 import { DELETE_ATTACHMENT_TOOL_METADATA } from './delete-attachment.metadata.js';
 
 /**
@@ -39,6 +40,11 @@ export class DeleteAttachmentTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof DeleteAttachmentParamsSchema {
     return DeleteAttachmentParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof DeleteAttachmentOutputSchema {
+    return DeleteAttachmentOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, DeleteAttachmentParamsSchema);

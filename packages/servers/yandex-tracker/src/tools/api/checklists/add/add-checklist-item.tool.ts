@@ -17,6 +17,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { ChecklistItemWithUnknownFields } from '#tracker_api/entities/index.js';
 import { AddChecklistItemParamsSchema } from '#tools/api/checklists/add/add-checklist-item.schema.js';
+import { AddChecklistItemOutputSchema } from './add-checklist-item.output-schema.js';
 
 import { ADD_CHECKLIST_ITEM_TOOL_METADATA } from './add-checklist-item.metadata.js';
 
@@ -42,6 +43,10 @@ export class AddChecklistItemTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof AddChecklistItemParamsSchema {
     return AddChecklistItemParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof AddChecklistItemOutputSchema {
+    return AddChecklistItemOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

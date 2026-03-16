@@ -17,6 +17,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { CommentWithUnknownFields } from '#tracker_api/entities/index.js';
 import { EditCommentParamsSchema } from '#tools/api/comments/edit/edit-comment.schema.js';
+import { EditCommentOutputSchema } from './edit-comment.output-schema.js';
 
 import { EDIT_COMMENT_TOOL_METADATA } from './edit-comment.metadata.js';
 
@@ -41,6 +42,10 @@ export class EditCommentTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof EditCommentParamsSchema {
     return EditCommentParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof EditCommentOutputSchema {
+    return EditCommentOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

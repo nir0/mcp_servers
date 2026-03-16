@@ -11,6 +11,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { GetBulkChangeStatusParamsSchema } from './get-bulk-change-status.schema.js';
+import { GetBulkChangeStatusOutputSchema } from './get-bulk-change-status.output-schema.js';
 
 import { GET_BULK_CHANGE_STATUS_TOOL_METADATA } from './get-bulk-change-status.metadata.js';
 
@@ -39,6 +40,11 @@ export class GetBulkChangeStatusTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof GetBulkChangeStatusParamsSchema {
     return GetBulkChangeStatusParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof GetBulkChangeStatusOutputSchema {
+    return GetBulkChangeStatusOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, GetBulkChangeStatusParamsSchema);

@@ -6,6 +6,7 @@ import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { ManageQueueAccessParamsSchema } from './manage-queue-access.schema.js';
+import { ManageQueueAccessOutputSchema } from './manage-queue-access.output-schema.js';
 
 import type { QueuePermissionWithUnknownFields } from '#tracker_api/entities/index.js';
 import { MANAGE_QUEUE_ACCESS_TOOL_METADATA } from './manage-queue-access.metadata.js';
@@ -20,6 +21,11 @@ export class ManageQueueAccessTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof ManageQueueAccessParamsSchema {
     return ManageQueueAccessParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof ManageQueueAccessOutputSchema {
+    return ManageQueueAccessOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, ManageQueueAccessParamsSchema);
     if (!validation.success) {

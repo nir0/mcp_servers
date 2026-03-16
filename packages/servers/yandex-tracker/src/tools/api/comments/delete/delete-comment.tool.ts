@@ -11,6 +11,7 @@ import { BaseTool, ResultLogger } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteCommentParamsSchema } from '#tools/api/comments/delete/delete-comment.schema.js';
+import { DeleteCommentOutputSchema } from './delete-comment.output-schema.js';
 
 import { DELETE_COMMENT_TOOL_METADATA } from './delete-comment.metadata.js';
 
@@ -35,6 +36,10 @@ export class DeleteCommentTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof DeleteCommentParamsSchema {
     return DeleteCommentParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof DeleteCommentOutputSchema {
+    return DeleteCommentOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

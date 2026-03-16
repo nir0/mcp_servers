@@ -11,6 +11,7 @@ import { BaseTool, ResultLogger } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteChecklistItemParamsSchema } from '#tools/api/checklists/delete/delete-checklist-item.schema.js';
+import { DeleteChecklistItemOutputSchema } from './delete-checklist-item.output-schema.js';
 
 import { DELETE_CHECKLIST_ITEM_TOOL_METADATA } from './delete-checklist-item.metadata.js';
 
@@ -36,6 +37,10 @@ export class DeleteChecklistItemTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof DeleteChecklistItemParamsSchema {
     return DeleteChecklistItemParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof DeleteChecklistItemOutputSchema {
+    return DeleteChecklistItemOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

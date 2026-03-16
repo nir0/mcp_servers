@@ -11,6 +11,7 @@ import { BaseTool, ResultLogger } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DeleteLinkParamsSchema } from './delete-link.schema.js';
+import { DeleteLinkOutputSchema } from './delete-link.output-schema.js';
 
 import { DELETE_LINK_TOOL_METADATA } from './delete-link.metadata.js';
 
@@ -36,6 +37,10 @@ export class DeleteLinkTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof DeleteLinkParamsSchema {
     return DeleteLinkParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof DeleteLinkOutputSchema {
+    return DeleteLinkOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

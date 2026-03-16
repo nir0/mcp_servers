@@ -13,6 +13,7 @@ import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure
 import { ResponseFieldFilter, BatchResultProcessor, ResultLogger } from '@fractalizer/mcp-core';
 import type { ChangelogEntryWithUnknownFields } from '#tracker_api/entities/index.js';
 import { GetIssueChangelogParamsSchema } from '#tools/api/issues/changelog/get-issue-changelog.schema.js';
+import { GetIssueChangelogOutputSchema } from './get-issue-changelog.output-schema.js';
 
 import { GET_ISSUE_CHANGELOG_TOOL_METADATA } from './get-issue-changelog.metadata.js';
 
@@ -43,6 +44,10 @@ export class GetIssueChangelogTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof GetIssueChangelogParamsSchema {
     return GetIssueChangelogParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof GetIssueChangelogOutputSchema {
+    return GetIssueChangelogOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

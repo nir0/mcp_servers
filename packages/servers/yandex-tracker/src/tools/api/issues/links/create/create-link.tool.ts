@@ -17,6 +17,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { LinkWithUnknownFields } from '#tracker_api/entities/index.js';
 import { CreateLinkParamsSchema } from './create-link.schema.js';
+import { CreateLinkOutputSchema } from './create-link.output-schema.js';
 
 import { CREATE_LINK_TOOL_METADATA } from './create-link.metadata.js';
 
@@ -42,6 +43,10 @@ export class CreateLinkTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof CreateLinkParamsSchema {
     return CreateLinkParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof CreateLinkOutputSchema {
+    return CreateLinkOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

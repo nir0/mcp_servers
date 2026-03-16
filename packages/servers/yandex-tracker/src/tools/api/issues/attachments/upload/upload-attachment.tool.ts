@@ -12,6 +12,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { AttachmentWithUnknownFields } from '#tracker_api/entities/index.js';
 import { UploadAttachmentParamsSchema } from './upload-attachment.schema.js';
+import { UploadAttachmentOutputSchema } from './upload-attachment.output-schema.js';
 import { readFile } from 'node:fs/promises';
 
 import { UPLOAD_ATTACHMENT_TOOL_METADATA } from './upload-attachment.metadata.js';
@@ -43,6 +44,11 @@ export class UploadAttachmentTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof UploadAttachmentParamsSchema {
     return UploadAttachmentParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof UploadAttachmentOutputSchema {
+    return UploadAttachmentOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, UploadAttachmentParamsSchema);

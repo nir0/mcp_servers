@@ -8,6 +8,7 @@ import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { UpdateProjectParamsSchema } from './update-project.schema.js';
+import { UpdateProjectOutputSchema } from './update-project.output-schema.js';
 
 import type { UpdateProjectDto } from '#tracker_api/dto/index.js';
 import type { ProjectWithUnknownFields } from '#tracker_api/entities/index.js';
@@ -23,6 +24,11 @@ export class UpdateProjectTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof UpdateProjectParamsSchema {
     return UpdateProjectParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof UpdateProjectOutputSchema {
+    return UpdateProjectOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, UpdateProjectParamsSchema);
     if (!validation.success) {

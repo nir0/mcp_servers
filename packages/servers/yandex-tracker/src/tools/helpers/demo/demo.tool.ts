@@ -13,6 +13,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { DemoParamsSchema } from './demo.schema.js';
+import { DemoOutputSchema } from './demo.output-schema.js';
 
 import { DEMO_TOOL_METADATA } from './demo.metadata.js';
 
@@ -29,6 +30,11 @@ export class DemoTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof DemoParamsSchema {
     return DemoParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof DemoOutputSchema {
+    return DemoOutputSchema;
+  }
+
   execute(params: ToolCallParams): Promise<ToolResult> {
     // Валидация параметров через BaseTool
     const validation = this.validateParams(params, DemoParamsSchema);

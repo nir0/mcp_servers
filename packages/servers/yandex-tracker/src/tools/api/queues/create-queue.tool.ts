@@ -8,6 +8,7 @@ import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { CreateQueueParamsSchema } from './create-queue.schema.js';
+import { CreateQueueOutputSchema } from './create-queue.output-schema.js';
 
 import type { CreateQueueDto } from '#tracker_api/dto/index.js';
 import type { QueueWithUnknownFields } from '#tracker_api/entities/index.js';
@@ -23,6 +24,11 @@ export class CreateQueueTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof CreateQueueParamsSchema {
     return CreateQueueParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof CreateQueueOutputSchema {
+    return CreateQueueOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, CreateQueueParamsSchema);
     if (!validation.success) {

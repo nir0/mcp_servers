@@ -6,6 +6,7 @@ import { BaseTool, ResponseFieldFilter, GrepFilter } from '@fractalizer/mcp-core
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { GetProjectsParamsSchema } from './get-projects.schema.js';
+import { GetProjectsOutputSchema } from './get-projects.output-schema.js';
 import type { ProjectWithUnknownFields } from '#tracker_api/entities/index.js';
 
 import { GET_PROJECTS_TOOL_METADATA } from './get-projects.metadata.js';
@@ -20,6 +21,11 @@ export class GetProjectsTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof GetProjectsParamsSchema {
     return GetProjectsParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof GetProjectsOutputSchema {
+    return GetProjectsOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     const validation = this.validateParams(params, GetProjectsParamsSchema);
     if (!validation.success) {

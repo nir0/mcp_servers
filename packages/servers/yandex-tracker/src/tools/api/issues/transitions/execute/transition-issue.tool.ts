@@ -14,6 +14,7 @@ import { ResponseFieldFilter } from '@fractalizer/mcp-core';
 import type { IssueWithUnknownFields } from '#tracker_api/entities/index.js';
 import type { ExecuteTransitionDto } from '#tracker_api/dto/index.js';
 import { TransitionIssueParamsSchema } from '#tools/api/issues/transitions/execute/transition-issue.schema.js';
+import { TransitionIssueOutputSchema } from './transition-issue.output-schema.js';
 
 import { TRANSITION_ISSUE_TOOL_METADATA } from './transition-issue.metadata.js';
 
@@ -44,6 +45,10 @@ export class TransitionIssueTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof TransitionIssueParamsSchema {
     return TransitionIssueParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof TransitionIssueOutputSchema {
+    return TransitionIssueOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

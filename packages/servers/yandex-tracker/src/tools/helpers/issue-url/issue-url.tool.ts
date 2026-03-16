@@ -12,6 +12,7 @@ import { BaseTool } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { IssueUrlParamsSchema } from '#tools/helpers/issue-url/issue-url.schema.js';
+import { IssueUrlOutputSchema } from './issue-url.output-schema.js';
 
 import { ISSUE_URL_TOOL_METADATA } from './issue-url.metadata.js';
 
@@ -40,6 +41,11 @@ export class IssueUrlTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof IssueUrlParamsSchema {
     return IssueUrlParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof IssueUrlOutputSchema {
+    return IssueUrlOutputSchema;
+  }
+
   execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, IssueUrlParamsSchema);

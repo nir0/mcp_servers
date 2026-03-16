@@ -13,6 +13,7 @@ import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure
 import { ResponseFieldFilter, ResultLogger } from '@fractalizer/mcp-core';
 import type { IssueWithUnknownFields } from '#tracker_api/entities/index.js';
 import { FindIssuesParamsSchema } from '#tools/api/issues/find/find-issues.schema.js';
+import { FindIssuesOutputSchema } from './find-issues.output-schema.js';
 
 import { FIND_ISSUES_TOOL_METADATA } from './find-issues.metadata.js';
 /**
@@ -41,6 +42,10 @@ export class FindIssuesTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof FindIssuesParamsSchema {
     return FindIssuesParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof FindIssuesOutputSchema {
+    return FindIssuesOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

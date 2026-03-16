@@ -13,6 +13,7 @@ import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure
 import { ResponseFieldFilter, ResultLogger } from '@fractalizer/mcp-core';
 import type { TransitionWithUnknownFields } from '#tracker_api/entities/index.js';
 import { GetIssueTransitionsParamsSchema } from '#tools/api/issues/transitions/get/get-issue-transitions.schema.js';
+import { GetIssueTransitionsOutputSchema } from './get-issue-transitions.output-schema.js';
 
 import { GET_ISSUE_TRANSITIONS_TOOL_METADATA } from './get-issue-transitions.metadata.js';
 
@@ -43,6 +44,10 @@ export class GetIssueTransitionsTool extends BaseTool<YandexTrackerFacade> {
    */
   protected override getParamsSchema(): typeof GetIssueTransitionsParamsSchema {
     return GetIssueTransitionsParamsSchema;
+  }
+
+  protected override getOutputSchema(): typeof GetIssueTransitionsOutputSchema {
+    return GetIssueTransitionsOutputSchema;
   }
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool

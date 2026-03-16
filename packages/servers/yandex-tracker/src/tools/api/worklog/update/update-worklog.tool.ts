@@ -13,6 +13,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { WorklogWithUnknownFields } from '#tracker_api/entities/index.js';
 import { UpdateWorklogParamsSchema } from '#tools/api/worklog/update/update-worklog.schema.js';
+import { UpdateWorklogOutputSchema } from './update-worklog.output-schema.js';
 
 import { UPDATE_WORKLOG_TOOL_METADATA } from './update-worklog.metadata.js';
 
@@ -37,6 +38,11 @@ export class UpdateWorklogTool extends BaseTool<YandexTrackerFacade> {
   protected override getParamsSchema(): typeof UpdateWorklogParamsSchema {
     return UpdateWorklogParamsSchema;
   }
+
+  protected override getOutputSchema(): typeof UpdateWorklogOutputSchema {
+    return UpdateWorklogOutputSchema;
+  }
+
   async execute(params: ToolCallParams): Promise<ToolResult> {
     // 1. Валидация параметров через BaseTool
     const validation = this.validateParams(params, UpdateWorklogParamsSchema);
