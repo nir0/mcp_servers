@@ -2,7 +2,7 @@
  * MCP Tool для получения списка компонентов очереди в Яндекс.Трекере
  */
 
-import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
+import { BaseTool, ResponseFieldFilter, GrepFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import type { ComponentWithUnknownFields } from '#tracker_api/entities/index.js';
@@ -29,7 +29,7 @@ export class GetComponentsTool extends BaseTool<YandexTrackerFacade> {
       return validation.error;
     }
 
-    const { queueId, fields } = validation.data;
+    const { queueId, fields, grep } = validation.data;
 
     try {
       this.logger.info('Получение списка компонентов очереди', {
@@ -48,11 +48,20 @@ export class GetComponentsTool extends BaseTool<YandexTrackerFacade> {
         queueId,
       });
 
+      const grepResult = GrepFilter.filter(filteredComponents, grep);
+
       return this.formatSuccess({
-        components: filteredComponents,
-        count: filteredComponents.length,
+        components: grepResult,
+        count: grepResult.length,
         queueId,
         fieldsReturned: fields,
+        ...(grep && {
+          grep,
+          grepMeta: {
+            fetchedTotal: filteredComponents.length,
+            matchedCount: grepResult.length,
+          },
+        }),
       });
     } catch (error: unknown) {
       return this.formatError('Ошибка при получении списка компонентов', error);

@@ -2,7 +2,7 @@
  * MCP Tool для получения списка очередей в Яндекс.Трекере
  */
 
-import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
+import { BaseTool, ResponseFieldFilter, GrepFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { GetQueuesParamsSchema } from './get-queues.schema.js';
@@ -29,7 +29,7 @@ export class GetQueuesTool extends BaseTool<YandexTrackerFacade> {
       return validation.error;
     }
 
-    const { fields, perPage = 50, page = 1, expand } = validation.data;
+    const { fields, perPage = 50, page = 1, expand, grep } = validation.data;
 
     try {
       this.logger.info('Получение списка очередей', {
@@ -49,12 +49,23 @@ export class GetQueuesTool extends BaseTool<YandexTrackerFacade> {
         ResponseFieldFilter.filter<QueueWithUnknownFields>(queue, fields)
       );
 
+      const grepResult = GrepFilter.filter(filteredQueues, grep);
+
       return this.formatSuccess({
-        queues: filteredQueues,
-        count: filteredQueues.length,
+        queues: grepResult,
+        count: grepResult.length,
         page,
         perPage,
         fieldsReturned: fields,
+        ...(grep && {
+          grep,
+          grepMeta: {
+            fetchedTotal: filteredQueues.length,
+            matchedCount: grepResult.length,
+            page,
+            perPage,
+          },
+        }),
       });
     } catch (error: unknown) {
       return this.formatError('Ошибка при получении списка очередей', error);

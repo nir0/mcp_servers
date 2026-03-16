@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { FieldsSchema } from '#common/schemas/index.js';
+import { FieldsSchema, GrepSchema } from '#common/schemas/index.js';
 
 /**
  * Схема параметров для получения списка очередей
@@ -28,6 +28,11 @@ export const GetQueuesParamsSchema = z.object({
    * Список полей для возврата (обязательно)
    */
   fields: FieldsSchema,
+
+  /**
+   * Regex для фильтрации очередей по значениям атрибутов (опционально)
+   */
+  grep: GrepSchema,
 });
 
 /**

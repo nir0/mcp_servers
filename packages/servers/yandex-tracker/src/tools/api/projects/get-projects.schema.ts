@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { FieldsSchema } from '#common/schemas/index.js';
+import { FieldsSchema, GrepSchema } from '#common/schemas/index.js';
 
 /**
  * Схема параметров для получения списка проектов
@@ -33,6 +33,11 @@ export const GetProjectsParamsSchema = z.object({
    * Список полей для возврата (обязательно)
    */
   fields: FieldsSchema,
+
+  /**
+   * Regex для фильтрации проектов по значениям атрибутов (опционально)
+   */
+  grep: GrepSchema,
 });
 
 /**

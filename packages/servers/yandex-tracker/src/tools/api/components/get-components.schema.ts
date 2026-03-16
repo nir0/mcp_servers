@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { FieldsSchema } from '#common/schemas/index.js';
+import { FieldsSchema, GrepSchema } from '#common/schemas/index.js';
 
 /**
  * Схема параметров для получения списка компонентов очереди
@@ -19,6 +19,11 @@ export const GetComponentsParamsSchema = z.object({
    * Примеры: ['id', 'name'], ['id', 'name', 'description', 'lead.login']
    */
   fields: FieldsSchema,
+
+  /**
+   * Regex для фильтрации компонентов по значениям атрибутов (опционально)
+   */
+  grep: GrepSchema,
 });
 
 /**

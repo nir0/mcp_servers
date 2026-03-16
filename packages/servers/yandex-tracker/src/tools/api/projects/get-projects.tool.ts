@@ -2,7 +2,7 @@
  * MCP Tool для получения списка проектов в Яндекс.Трекере
  */
 
-import { BaseTool, ResponseFieldFilter } from '@fractalizer/mcp-core';
+import { BaseTool, ResponseFieldFilter, GrepFilter } from '@fractalizer/mcp-core';
 import type { YandexTrackerFacade } from '#tracker_api/facade/index.js';
 import type { ToolCallParams, ToolResult } from '@fractalizer/mcp-infrastructure';
 import { GetProjectsParamsSchema } from './get-projects.schema.js';
@@ -26,7 +26,7 @@ export class GetProjectsTool extends BaseTool<YandexTrackerFacade> {
       return validation.error;
     }
 
-    const { fields, perPage, page, expand, queueId } = validation.data;
+    const { fields, perPage, page, expand, queueId, grep } = validation.data;
 
     try {
       this.logger.info('Получение списка проектов', {
@@ -52,11 +52,22 @@ export class GetProjectsTool extends BaseTool<YandexTrackerFacade> {
         ResponseFieldFilter.filter<ProjectWithUnknownFields>(project, fields)
       );
 
+      const grepResult = GrepFilter.filter(filteredProjects, grep);
+
       return this.formatSuccess({
-        projects: filteredProjects,
+        projects: grepResult,
         total: result.total,
-        count: filteredProjects.length,
+        count: grepResult.length,
         fieldsReturned: fields,
+        ...(grep && {
+          grep,
+          grepMeta: {
+            fetchedTotal: filteredProjects.length,
+            matchedCount: grepResult.length,
+            page: page ?? 1,
+            perPage: perPage ?? 50,
+          },
+        }),
       });
     } catch (error: unknown) {
       return this.formatError('Ошибка при получении списка проектов', error);

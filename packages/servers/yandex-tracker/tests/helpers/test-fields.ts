@@ -68,3 +68,16 @@ export function createFieldsSet(...fields: string[]): string[] {
 export const STANDARD_QUEUE_FIELD_FIELDS = ['id', 'key', 'name', 'required', 'type'] as const;
 
 export const STANDARD_QUEUE_PERMISSION_FIELDS = ['id', 'self', 'display'] as const;
+
+export const STANDARD_BOARD_FIELDS = [
+  'id',
+  'self',
+  'version',
+  'name',
+  'columns',
+  'filter',
+  'orderBy',
+  'orderAsc',
+] as const;
+
+export const MINIMAL_BOARD_FIELDS = ['id', 'name', 'version'] as const;

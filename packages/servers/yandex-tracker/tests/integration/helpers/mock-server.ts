@@ -1619,6 +1619,228 @@ export class MockServer {
     return this;
   }
 
+  // ============================================================
+  // BOARDS API МЕТОДЫ
+  // ============================================================
+
+  /**
+   * Mock успешного получения списка досок
+   */
+  mockGetBoardsSuccess(boards?: unknown[]): this {
+    const defaultBoards = [
+      {
+        id: '1',
+        self: 'https://api.tracker.yandex.net/v2/boards/1',
+        version: 1,
+        name: 'Sprint Board',
+        columns: [
+          { id: 'col-1', name: 'Open', statuses: [{ id: '1', key: 'open', display: 'Open' }] },
+        ],
+        filter: { query: 'queue: TEST' },
+        orderBy: 'updated',
+        orderAsc: false,
+      },
+      {
+        id: '2',
+        self: 'https://api.tracker.yandex.net/v2/boards/2',
+        version: 1,
+        name: 'Kanban Board',
+        columns: [],
+        orderBy: 'created',
+        orderAsc: true,
+      },
+    ];
+    const mockKey = 'GET /v2/boards';
+    const urlPattern = /^\/v2\/boards(\?.*)?$/;
+    this.mockAdapter.onGet(urlPattern).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [200, boards ?? defaultBoards];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock пустого списка досок
+   */
+  mockGetBoardsEmpty(): this {
+    const mockKey = 'GET /v2/boards';
+    const urlPattern = /^\/v2\/boards(\?.*)?$/;
+    this.mockAdapter.onGet(urlPattern).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [200, []];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock успешного получения одной доски
+   */
+  mockGetBoardSuccess(boardId: string, overrides?: Record<string, unknown>): this {
+    const board = {
+      id: boardId,
+      self: `https://api.tracker.yandex.net/v2/boards/${boardId}`,
+      version: 1,
+      name: 'Test Board',
+      columns: [
+        { id: 'col-1', name: 'Open', statuses: [{ id: '1', key: 'open', display: 'Open' }] },
+      ],
+      filter: { query: 'queue: TEST' },
+      orderBy: 'updated',
+      orderAsc: false,
+      ...overrides,
+    };
+    const mockKey = `GET /v2/boards/${boardId}`;
+    this.mockAdapter.onGet(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [200, board];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock ошибки 404 при получении доски
+   */
+  mockGetBoard404(boardId: string): this {
+    const response = generateError404();
+    const mockKey = `GET /v2/boards/${boardId}`;
+    this.mockAdapter.onGet(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [404, response];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock успешного создания доски
+   */
+  mockCreateBoardSuccess(boardData?: Record<string, unknown>): this {
+    const board = {
+      id: '100',
+      self: 'https://api.tracker.yandex.net/v2/boards/100',
+      version: 1,
+      name: 'New Board',
+      columns: [],
+      ...boardData,
+    };
+    const mockKey = 'POST /v2/boards';
+    this.mockAdapter.onPost('/v2/boards').reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [201, board];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock ошибки 403 при создании доски
+   */
+  mockCreateBoard403(): this {
+    const response = generateError403();
+    const mockKey = 'POST /v2/boards';
+    this.mockAdapter.onPost('/v2/boards').reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [403, response];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock успешного обновления доски
+   */
+  mockUpdateBoardSuccess(boardId: string, updates?: Record<string, unknown>): this {
+    const board = {
+      id: boardId,
+      self: `https://api.tracker.yandex.net/v2/boards/${boardId}`,
+      version: 2,
+      name: 'Updated Board',
+      columns: [],
+      ...updates,
+    };
+    const mockKey = `PATCH /v2/boards/${boardId}`;
+    this.mockAdapter.onPatch(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [200, board];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock ошибки 404 при обновлении доски
+   */
+  mockUpdateBoard404(boardId: string): this {
+    const response = generateError404();
+    const mockKey = `PATCH /v2/boards/${boardId}`;
+    this.mockAdapter.onPatch(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [404, response];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock успешного удаления доски
+   */
+  mockDeleteBoardSuccess(boardId: string): this {
+    const mockKey = `DELETE /v2/boards/${boardId}`;
+    this.mockAdapter.onDelete(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [204, ''];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
+  /**
+   * Mock ошибки 404 при удалении доски
+   */
+  mockDeleteBoard404(boardId: string): this {
+    const response = generateError404();
+    const mockKey = `DELETE /v2/boards/${boardId}`;
+    this.mockAdapter.onDelete(`/v2/boards/${boardId}`).reply(() => {
+      const index = this.pendingMocks.indexOf(mockKey);
+      if (index !== -1) {
+        this.pendingMocks.splice(index, 1);
+      }
+      return [404, response];
+    });
+    this.pendingMocks.push(mockKey);
+    return this;
+  }
+
   /**
    * Очистить все моки и восстановить оригинальный адаптер
    */

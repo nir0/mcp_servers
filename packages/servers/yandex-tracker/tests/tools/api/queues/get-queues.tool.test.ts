@@ -8,7 +8,7 @@ import type { YandexTrackerFacade } from '#tracker_api/facade/yandex-tracker.fac
 import type { Logger } from '@fractalizer/mcp-infrastructure/logging/index.js';
 import { buildToolName } from '@fractalizer/mcp-core';
 import { MCP_TOOL_PREFIX } from '#constants';
-import { createQueueListFixture } from '#helpers/queue.fixture.js';
+import { createQueueListFixture, createQueueFixture } from '#helpers/queue.fixture.js';
 
 describe('GetQueuesTool', () => {
   let mockTrackerFacade: YandexTrackerFacade;
@@ -215,6 +215,85 @@ describe('GetQueuesTool', () => {
         expect(parsed.success).toBe(true);
         expect(parsed.data.queues).toHaveLength(0);
         expect(parsed.data.count).toBe(0);
+      });
+    });
+
+    describe('grep фильтрация', () => {
+      it('должен фильтровать очереди по grep паттерну и возвращать grepMeta', async () => {
+        const mockQueues = [
+          createQueueFixture({ key: 'CRM', name: 'CRM Queue' }),
+          createQueueFixture({ key: 'DEV', name: 'Development Queue' }),
+          createQueueFixture({ key: 'CRM2', name: 'CRM Support' }),
+        ];
+        vi.mocked(mockTrackerFacade.getQueues).mockResolvedValue(mockQueues);
+
+        const result = await tool.execute({ fields: ['key', 'name'], grep: 'CRM' });
+
+        expect(result.isError).toBeUndefined();
+        const parsed = JSON.parse(result.content[0]?.text || '{}') as {
+          success: boolean;
+          data: {
+            queues: Array<{ key: string; name: string }>;
+            count: number;
+            grep: string;
+            grepMeta: { fetchedTotal: number; matchedCount: number; page: number; perPage: number };
+          };
+        };
+        expect(parsed.success).toBe(true);
+        expect(parsed.data.queues).toHaveLength(2);
+        expect(parsed.data.count).toBe(2);
+        expect(parsed.data.grep).toBe('CRM');
+        expect(parsed.data.grepMeta.fetchedTotal).toBe(3);
+        expect(parsed.data.grepMeta.matchedCount).toBe(2);
+        expect(parsed.data.grepMeta.page).toBe(1);
+        expect(parsed.data.grepMeta.perPage).toBe(50);
+        expect(parsed.data.queues.map((q) => q.key)).toEqual(['CRM', 'CRM2']);
+      });
+
+      it('должен вернуть все очереди если grep не указан', async () => {
+        const mockQueues = createQueueListFixture(3);
+        vi.mocked(mockTrackerFacade.getQueues).mockResolvedValue(mockQueues);
+
+        const result = await tool.execute({ fields: ['key', 'name'] });
+
+        const parsed = JSON.parse(result.content[0]?.text || '{}') as {
+          success: boolean;
+          data: { queues: unknown[]; count: number; grep?: string };
+        };
+        expect(parsed.data.queues).toHaveLength(3);
+        expect(parsed.data.grep).toBeUndefined();
+      });
+
+      it('должен вернуть пустой массив если grep ничего не нашёл', async () => {
+        const mockQueues = createQueueListFixture(3);
+        vi.mocked(mockTrackerFacade.getQueues).mockResolvedValue(mockQueues);
+
+        const result = await tool.execute({ fields: ['key', 'name'], grep: 'NONEXISTENT' });
+
+        const parsed = JSON.parse(result.content[0]?.text || '{}') as {
+          success: boolean;
+          data: { queues: unknown[]; count: number };
+        };
+        expect(parsed.data.queues).toHaveLength(0);
+        expect(parsed.data.count).toBe(0);
+      });
+
+      it('должен поддерживать regex в grep', async () => {
+        const mockQueues = [
+          createQueueFixture({ key: 'DEV', name: 'Development' }),
+          createQueueFixture({ key: 'DESIGN', name: 'Design' }),
+          createQueueFixture({ key: 'QA', name: 'Quality Assurance' }),
+        ];
+        vi.mocked(mockTrackerFacade.getQueues).mockResolvedValue(mockQueues);
+
+        const result = await tool.execute({ fields: ['key', 'name'], grep: '^De' });
+
+        const parsed = JSON.parse(result.content[0]?.text || '{}') as {
+          success: boolean;
+          data: { queues: Array<{ key: string }> };
+        };
+        expect(parsed.data.queues).toHaveLength(2);
+        expect(parsed.data.queues.map((q) => q.key)).toEqual(['DEV', 'DESIGN']);
       });
     });
 

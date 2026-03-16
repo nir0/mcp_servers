@@ -66,6 +66,13 @@ import {
   BulkMoveIssuesTool,
   GetBulkChangeStatusTool,
 } from '#tools/api/bulk-change/index.js';
+import {
+  GetBoardsTool,
+  GetBoardTool,
+  CreateBoardTool,
+  UpdateBoardTool,
+  DeleteBoardTool,
+} from '#tools/api/boards/index.js';
 import { IssueUrlTool } from '#tools/helpers/issue-url/index.js';
 import { DemoTool } from '#tools/helpers/demo/index.js';
 
@@ -133,6 +140,11 @@ export const TOOL_CLASSES = [
   BulkTransitionIssuesTool,
   BulkMoveIssuesTool,
   GetBulkChangeStatusTool,
+  GetBoardsTool,
+  GetBoardTool,
+  CreateBoardTool,
+  UpdateBoardTool,
+  DeleteBoardTool,
   IssueUrlTool,
   DemoTool,
 ] as const;

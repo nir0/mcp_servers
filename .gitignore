@@ -71,5 +71,8 @@ jscpd-report/
 # Динамически генерируемые файлы (build hash обновляется при каждой сборке)
 packages/servers/*/manifest.json
 
+# Claude Code local settings (содержит user-specific permissions)
+.claude/settings.local.json
+
 # Turborepo
 .turbo/

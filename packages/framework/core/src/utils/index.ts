@@ -1,4 +1,5 @@
 export { ResponseFieldFilter } from './response-field-filter.js';
+export { GrepFilter } from './grep-filter.js';
 export { BatchResultProcessor } from './batch-result-processor.js';
 export { ResultLogger } from './result-logger.js';
 export {
