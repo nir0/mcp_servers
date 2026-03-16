@@ -43,6 +43,27 @@ describe('GetQueuesTool', () => {
       expect(definition.inputSchema.properties?.['expand']).toBeDefined();
       expect(definition.inputSchema.properties?.['fields']).toBeDefined();
     });
+
+    it('должен включать outputSchema в definition', () => {
+      const definition = tool.getDefinition();
+
+      expect(definition.outputSchema).toBeDefined();
+      expect(definition.outputSchema!.type).toBe('object');
+      expect(definition.outputSchema!.properties).toBeDefined();
+    });
+
+    it('outputSchema.data должен описывать queues и пагинацию', () => {
+      const definition = tool.getDefinition();
+      const dataSchema = definition.outputSchema!.properties!['data'] as {
+        type: string;
+        properties: Record<string, unknown>;
+      };
+
+      expect(dataSchema.properties['queues']).toBeDefined();
+      expect(dataSchema.properties['count']).toBeDefined();
+      expect(dataSchema.properties['page']).toBeDefined();
+      expect(dataSchema.properties['perPage']).toBeDefined();
+    });
   });
 
   describe('execute', () => {

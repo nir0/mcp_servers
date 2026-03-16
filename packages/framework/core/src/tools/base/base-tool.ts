@@ -93,6 +93,17 @@ export abstract class BaseTool<TFacade = unknown> {
       definition = this.buildDefinition();
     }
 
+    // Генерируем outputSchema если определён getOutputSchema()
+    const outputZodSchema = this.getOutputSchema?.();
+    if (outputZodSchema) {
+      const outputSchema = generateDefinitionFromSchema(outputZodSchema, {
+        includeDescriptions: true,
+        includeExamples: false,
+        strict: false,
+      });
+      definition.outputSchema = outputSchema;
+    }
+
     // Добавляем метаданные из METADATA
     const result: ToolDefinition = {
       ...definition,
@@ -127,6 +138,17 @@ export abstract class BaseTool<TFacade = unknown> {
    * ```
    */
   protected getParamsSchema?(): z.ZodObject<z.ZodRawShape>;
+
+  /**
+   * Получить Zod схему ответа для автогенерации outputSchema
+   *
+   * Переопределите этот метод для описания структуры ответа инструмента.
+   * LLM агенты увидят outputSchema в tools/list и смогут узнать
+   * доступные поля и их типы без угадывания.
+   *
+   * @returns Zod схема ответа или undefined (если outputSchema не нужен)
+   */
+  protected getOutputSchema?(): z.ZodObject<z.ZodRawShape>;
 
   /**
    * Построить базовое определение инструмента (LEGACY)
@@ -201,23 +223,28 @@ export abstract class BaseTool<TFacade = unknown> {
 
   /**
    * Форматирование успешного результата
+   *
+   * Если определён getOutputSchema(), добавляет structuredContent
+   * для поддержки MCP outputSchema (LLM агенты получают типизированный ответ)
    */
   protected formatSuccess(data: unknown): ToolResult {
-    return {
+    const envelope = { success: true, data };
+
+    const result: ToolResult = {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(
-            {
-              success: true,
-              data,
-            },
-            null,
-            2
-          ),
+          text: JSON.stringify(envelope, null, 2),
         },
       ],
     };
+
+    // Добавляем structuredContent если tool определяет outputSchema
+    if (this.getOutputSchema) {
+      result.structuredContent = envelope as Record<string, unknown>;
+    }
+
+    return result;
   }
 
   /**

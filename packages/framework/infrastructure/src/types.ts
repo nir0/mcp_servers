@@ -109,6 +109,8 @@ export interface ToolResult {
     text: string;
     [key: string]: unknown;
   }>;
+  /** Структурированный ответ (MCP structuredContent), соответствует outputSchema */
+  structuredContent?: Record<string, unknown>;
   isError?: boolean;
   [key: string]: unknown;
 }

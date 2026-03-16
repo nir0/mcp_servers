@@ -90,6 +90,7 @@ function setupServer(
         name: def.name,
         description: def.description,
         inputSchema: def.inputSchema,
+        ...(def.outputSchema && { outputSchema: def.outputSchema }),
       })),
     };
   });

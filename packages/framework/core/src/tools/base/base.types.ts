@@ -19,6 +19,12 @@ export interface ToolDefinition {
     properties: Record<string, unknown>;
     required?: string[];
   };
+  /** JSON Schema для описания структуры ответа (MCP outputSchema) */
+  outputSchema?: {
+    type: 'object';
+    properties?: Record<string, unknown>;
+    required?: string[];
+  };
   /** Категория инструмента для группировки */
   category?: string;
   /** Подкатегория для детальной группировки (опционально) */
